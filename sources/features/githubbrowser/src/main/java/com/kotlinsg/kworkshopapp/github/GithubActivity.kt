@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
-import com.kotlinsg.kworkshopapp.App
+import codegraft.inject.AndroidInject
 import com.kotlinsg.kworkshopapp.GithubProject
 import com.kotlinsg.kworkshopapp.app.R
-import com.kotlinsg.kworkshopapp.di.GithubActivityComponent
+import com.kotlinsg.kworkshopapp.di.GithubActivityModule
 import com.kotlinsg.kworkshopapp.notification.di.NotificationUseCase
 import com.kotlinsg.kworkshopapp.tools.Toaster
 import javax.inject.Inject
 
+@AndroidInject(
+    includes = [GithubActivityModule::class]
+)
 class GithubActivity : AppCompatActivity() {
 
     @Inject lateinit var toaster: Toaster
@@ -24,19 +27,12 @@ class GithubActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_github)
-        inject()
         refreshButton = findViewById(R.id.stars_refresh) as Button
         starsCountText = findViewById(R.id.stars_count_text) as TextView
 
         refreshButton.setOnClickListener { useCase.loadInfoFromGithub(onLoaded = ::updateUI, onError = ::updateErrorUI) }
 
         notifications.showMessage()
-    }
-
-    fun inject() {
-        GithubActivityComponent.Initializer
-                .init((applicationContext as App).getAppComponent())
-                .inject(this@GithubActivity)
     }
 
     private fun updateErrorUI(error: Throwable) {

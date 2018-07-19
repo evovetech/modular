@@ -1,8 +1,8 @@
 package com.kotlinsg.kworkshopapp.notification.di
 
+import codegraft.inject.BootstrapComponent
 import com.kotlinsg.kworkshopapp.di.MainToolsProvider
 import com.kotlinsg.kworkshopapp.tools.Toaster
-import dagger.Component
 import dagger.Module
 import dagger.Provides
 
@@ -19,18 +19,8 @@ class NotificationModule {
                 }
             }
 }
-
-@Component(
-        dependencies = [MainToolsProvider::class],
-        modules = [NotificationModule::class])
-interface NotificationComponent : NotificationProvider {
-    class Initializer private constructor() {
-        companion object {
-
-            fun init(mainToolsProvider: MainToolsProvider): NotificationProvider =
-                    DaggerNotificationComponent.builder()
-                            .mainToolsProvider(mainToolsProvider)
-                            .build()
-        }
-    }
-}
+@BootstrapComponent(
+    applicationModules = [NotificationModule::class],
+    flatten = true
+)
+interface NotificationComponent : NotificationProvider

@@ -1,22 +1,26 @@
 package com.kotlinsg.kworkshopapp
 
 import android.app.Application
-import com.kotlinsg.kworkshopapp.di.AppComponent
-import com.kotlinsg.kworkshopapp.di.ApplicationProvider
+import codegraft.inject.AndroidInject
+import codegraft.inject.android.BootApplication
+import com.kotlinsg.kworkshopapp.tools.LoggerImpl
 import com.kotlinsg.kworkshopapp.tools.Toaster
+import com.kotlinsg.kworkshopapp.tools.ToasterImpl
 import javax.inject.Inject
 
-
-class RealApp : Application(), App {
-
+@AndroidInject
+class RealApp : Application(), BootApplication<AppComponent> {
     @Inject lateinit var toaster: Toaster
-    val appComponent: AppComponent by lazy { AppComponent.Initializer.init(this@RealApp) }
+
+    override
+    val bootstrap = bootstrap {
+        loggerApplicationFunction1 { LoggerImpl() }
+        toasterApplicationFunction1 { ToasterImpl(applicationContext) }
+        this@RealApp
+    }
 
     override fun onCreate() {
         super.onCreate()
-        appComponent.inject(this)
         toaster.show("app injected")
     }
-
-    override fun getAppComponent(): ApplicationProvider = appComponent
 }

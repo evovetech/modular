@@ -1,3 +1,18 @@
+buildscript {
+    gradle.ext.configDir = file('gradle/config').absoluteFile
+
+    def root = "https://gist.githubusercontent.com/laynepenney/ae549913ce1f25ab98c19bf77d7e920d/raw"
+    def version = "75f68c513e92161e4d6cbe16151f180a6ce0e648"
+    apply from: "${root}/${version}/buildscript.gradle"
+    ext.configDir = gradle.configDir
+
+    repositories(gradle.buildscriptRepos)
+    dependencies(gradle.buildscriptDependencies)
+}
+
+apply plugin: 'evovetech.settings'
+apply from: "${configDir}/plugins.gradle"
+
 include ':core'
 project(':core').projectDir = new File(rootDir, 'sources/base/core')
 include ':injector'

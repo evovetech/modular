@@ -1,25 +1,23 @@
 package com.kotlinsg.kworkshopapp.di
 
-import com.kotlinsg.kworkshopapp.App
+import codegraft.inject.BootstrapComponent
 import com.kotlinsg.kworkshopapp.actions.ShowGithubScreenAction
 import com.kotlinsg.kworkshopapp.repo.GithubRepo
 import com.kotlinsg.kworkshopapp.tools.Toaster
 
-interface ApplicationProvider :
-        MainToolsProvider,
-        GithubBrowserProvider,
-        RepoProvider
-
+@BootstrapComponent(
+    bootstrapModules = [MainToolsModule::class],
+    flatten = true
+)
 interface MainToolsProvider {
-    fun provideContext(): App
-    fun provideLogger(): Logger
-    fun provideToast(): Toaster
+    val logger: Logger
+    val toast: Toaster
 }
 
 interface GithubBrowserProvider {
-    fun provideShowGithubScreenAction(): ShowGithubScreenAction
+    val showGithubScreenAction: ShowGithubScreenAction
 }
 
 interface RepoProvider {
-    fun provideGithubRepo(): GithubRepo
+    val githubRepo: GithubRepo
 }

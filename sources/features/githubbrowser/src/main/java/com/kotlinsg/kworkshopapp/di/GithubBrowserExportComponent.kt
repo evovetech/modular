@@ -1,10 +1,10 @@
 package com.kotlinsg.kworkshopapp.di;
 
+import codegraft.inject.BootstrapComponent
 import com.kotlinsg.kworkshopapp.actions.ShowGithubScreenAction
 import com.kotlinsg.kworkshopapp.actions.ShowGithubScreenActionRealImpl
-import dagger.Component
-import dagger.Module;
-import dagger.Provides;
+import dagger.Module
+import dagger.Provides
 
 @Module
 class GithubBrowserExportModule {
@@ -12,20 +12,8 @@ class GithubBrowserExportModule {
     fun provideShowGithubAction(): ShowGithubScreenAction = ShowGithubScreenActionRealImpl()
 }
 
-@Component(
-        dependencies = [MainToolsProvider::class],
-        modules = [GithubBrowserExportModule::class]
+@BootstrapComponent(
+    applicationModules = [GithubBrowserExportModule::class],
+    flatten = true
 )
-interface GithubBrowserExportComponent : GithubBrowserProvider {
-    class Initializer private constructor() {
-        companion object {
-
-            fun init(mainToolsProvider: MainToolsProvider): GithubBrowserProvider {
-
-                return DaggerGithubBrowserExportComponent.builder()
-                        .mainToolsProvider(mainToolsProvider)
-                        .build()
-            }
-        }
-    }
-}
+interface GithubBrowserExportComponent : GithubBrowserProvider

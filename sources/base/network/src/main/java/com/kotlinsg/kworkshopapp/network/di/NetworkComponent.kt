@@ -1,23 +1,22 @@
 package com.kotlinsg.kworkshopapp.network.di
 
-import com.kotlinsg.kworkshopapp.di.MainToolsProvider
+import codegraft.inject.BootstrapComponent
 import com.kotlinsg.kworkshopapp.network.NetworkClient
 import com.kotlinsg.kworkshopapp.network.NetworkClientImpl
 import dagger.Binds
-import dagger.Component
 import dagger.Module
 
 interface NetworkProvider {
-    fun provideNetworkClient(): NetworkClient
+    val networkClient: NetworkClient
 }
-
 
 @Module
 interface NetworkModule {
     @Binds fun bindsNetworkClient(impl: NetworkClientImpl): NetworkClient
 }
 
-@Component(
-        dependencies = [MainToolsProvider::class],
-        modules = [NetworkModule::class])
+@BootstrapComponent(
+    applicationModules = [NetworkModule::class],
+    flatten = true
+)
 interface NetworkComponent : NetworkProvider
